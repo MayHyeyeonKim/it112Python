@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <title>unknown</title>
+    <head>
+
+    </head>
+    <body>
+        <table>
+          <thead>
+            <td>Name</td>
+            <td>Phone</td>
+            <td>email</td>
+            <td>birth</td>
+          </thead>
+          <tbody>
+            {% for dt in data %}
+            <tr>
+              <td><a href="/user/{{dt.id}}">{{dt.name}}</a></td>
+              <td>{{dt.phone}}</td>
+              <td>{{dt.email}}</td>
+              <td>{{dt.birth}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    </body>
+</html>
