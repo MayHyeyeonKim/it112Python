@@ -1,62 +1,77 @@
-from flask import Flask, jsonify, request, Response, render_template, make_response
-from database import init_db, db_session
-from models import User
+from flask import Flask, request, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
 
-init_db()
-#createData()
+class User(db.Model):
+    id          = db.Column(db.Integer, primary_key=True)
+    name        = db.Column(db.String(50), unique=False)
+    phone       = db.Column(db.String(120), unique=False)
+    email       = db.Column(db.String(120), unique=True)
+    birth       = db.Column(db.String(10), unique=False)
+    gender      = db.Column(db.String(10), unique=False)
+    hobby       = db.Column(db.String(120), unique=False)
+    carNo       = db.Column(db.String(120), unique=False)
+    description = db.Column(db.String(200), unique=False)
+
+    def __init__(self, name=None, phone=None, email=None, birth=None, gender=None, hobby=None, carNo=None, description=None):
+        self.name = name
+        self.phone = phone
+        self.email = email
+        self.birth = birth
+        self.gender = gender
+        self.hobby = hobby
+        self.carNo = carNo
+        self.description = description
+        
+    def __repr__(self):
+        return '<User %r>' % (self.name)
 
 
 @app.route('/insert')
 def insert():
-  from models import User
-  db_session.add(
+  db.create_all()
+  db.session.add(
     User('John', '010-1234-1234', 'John@localhost', '02/03/2000', 'M',
          'Hunting', 'A3385', 'Sample Description'))
-  db_session.add(
+  db.session.add(
     User('Estell', '010-234-2345', 'Estell@localhost', '02/03/2001', 'F',
          'Hunting', 'A3325', '22 Description'))
-  db_session.add(
+  db.session.add(
     User('Mike', '010-432-321', 'Mike@localhost', '09/03/1997', 'M', 'Fishing',
          'A3326', '22 Description 22'))
-  db_session.add(
+  db.session.add(
     User('Dona', '123-345-9867', 'Dona@localhost', '09/05/1994', 'M', 'Boxing',
          'A1236', '22 Description 22'))
-  db_session.commit()
+  db.session.commit()
   return 'test'
 
 
-@app.route('/users', methods=["GET"])
+@app.route('/users')
 def users():
   data = User.query.all()
-  res = []
+  res = ''
   for dt in data:
-    row = {'id' : dt.id,
-           'name' : dt.name
-           , 'phone' : dt.phone
-           , 'email' : dt.email
-           , 'gender' : dt.gender
-           , 'birth' : dt.birth
-           , 'carNo' : dt.carNo
-           , 'description' : dt.description
-           , 'hobby' : dt.hobby}
-    res.append(row)
-  resp = make_response(jsonify(res))
-  resp.headers['content-type'] = 'application/json'
-  return resp
+    res += dt.name
+    res += ' ' + dt.email
+    res += ' ' + dt.gender
+    res += '<br>'
+  return render_template('list.html', data=data)
 
-@app.route('/user', methods=["POST"])
-def createUser():
-  try:
-    user = request.get_json()
-    db_session.add(
-    User(user['name'], user['phone'],  user['email'], user['birth']
-         , user['gender'],
-         user['hobby'], user['carNo'], user['description']))
-    db_session.commit()
-    return users()
-  except Exception as e:
-    return Response("{'message':'fail'}", status=500, mimetype='application/json')
+@app.route('/user/<id>')
+def user(id):
+  dt = User.query.filter(User.id==id).first()
+  res = ''
+  res += 'Name : ' + dt.name
+  res += '<br>Phone : ' + dt.phone
+  res += '<br>Email : ' + dt.email
+  res += '<br>Birth : ' + dt.birth
+  res += '<br>Gender : ' + dt.gender
+  res += '<br>Hobby : ' + dt.hobby
+  res += '<br>CarNo : ' + dt.carNo
+  res += '<br>Description : ' + dt.description
+  return res
 
 app.run(host='0.0.0.0', port=81)
