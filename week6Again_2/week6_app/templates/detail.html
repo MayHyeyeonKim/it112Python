@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            color: #333;
+            line-height: 1.5;
+            margin: 100px;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 30px 0;
+        }
+
+        a {
+            color: #2b28d3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Detail</h1>
+    <h3>{{ students_detail.firstname }} {{ students_detail.lastname }}</h3>
+    <p>Date of Birth: {{ students_detail.date_of_birth }}</p>
+    <p>Phone: {{ students_detail.phone }}</p>
+    <p>City: {{ students_detail.city }}</p>
+    <p>Zip Code: {{ students_detail.zip }}</p>
+    <p>State: {{ students_detail.state }}</p>
+    <p>Graduation: {{ students_detail.graduation }}</p>
+    <p>Email: {{ students_detail.email }}</p>
+    <p>Year: {{ students_detail.year }}</p>
+    <hr>
+    <p><a href="/students/">Click Here! If you want to go back to all students list</a></p>
+</body>
+</html>
